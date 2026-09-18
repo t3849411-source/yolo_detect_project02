@@ -41,3 +41,5 @@ uv run gunicorn app.main:app \
 ```
 
 Set the variables from `.env.example` in the process manager when defaults need to change. Docker Compose reads a local `.env` file automatically and exposes the service on port 8000.
+
+On Render, the Docker command binds Gunicorn to the platform-provided `PORT`. The repository root `render.yaml` creates the API with `/health` as its health check and disables startup warmup to reduce the free instance's initial memory spike.

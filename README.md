@@ -2,7 +2,9 @@
 
 사진에서 드론의 위치를 찾고 신뢰도와 처리 시간을 보여주는 웹 애플리케이션입니다. 두 개의 공개 데이터셋을 중복 제거 후 통합하여 YOLO26n을 학습했고, React 클라이언트와 FastAPI 추론 API로 실제 서비스 흐름을 구현했습니다.
 
-> 현재 사진 탐지 기능까지 동작합니다. 모바일 실시간 카메라 탐지, ONNX 경량화와 Render 배포는 다음 개발 단계입니다.
+> 현재 사진 탐지 기능과 Render Blueprint 구성이 완료되어 있습니다. 모바일 실시간 카메라 탐지와 ONNX 경량화는 다음 개발 단계입니다.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/t3849411-source/yolo_detect_project02)
 
 ![드론 탐지 실행 화면](docs/assets/drone-detection-ui.png)
 
@@ -35,6 +37,7 @@
 - 신뢰도·겹침 제거 기준 조절과 처리 시간 표시
 - 모바일·태블릿·데스크톱 반응형 화면
 - FastAPI 스모크 테스트와 Playwright 업로드 검사
+- Render Static Site와 Docker Web Service를 함께 만드는 Blueprint
 
 ### 다음 단계
 
@@ -43,7 +46,7 @@
 - WebSocket 기반 적응형 프레임 전송과 실시간 탐지 상자
 - ONNX Runtime 변환 후 정확도·속도·메모리 비교
 - 결과 차트와 탐지 이미지 다운로드
-- Render Static Site와 Web Service 배포
+- Render Blueprint 적용 후 공개 주소와 모바일 실기기 검증 결과 기록
 - GitHub Actions 자동 검사
 
 ## 서비스 구조
@@ -55,8 +58,8 @@ flowchart LR
     B --> C[YOLO26n CPU 추론]
     C --> D[탐지 좌표 · 신뢰도 · 처리 시간]
     D --> A
-    E[Render Static Site · 계획] -.-> A
-    F[Render Web Service · 계획] -.-> B
+    E[Render Static Site] --> A
+    F[Render Web Service] --> B
 ```
 
 사진 요청은 `multipart/form-data`로 전달됩니다. 계획된 카메라 모드는 브라우저가 프레임을 640픽셀 입력으로 축소하고, 이전 결과를 받은 뒤 다음 프레임을 보내 요청이 쌓이지 않게 설계합니다. 카메라 프레임은 저장하지 않습니다.
@@ -83,8 +86,8 @@ flowchart LR
 | 모델 | Ultralytics YOLO26n, PyTorch |
 | 서버 | Python 3.12, FastAPI, Uvicorn, Gunicorn |
 | 클라이언트 | TypeScript, React, Vite, Tailwind CSS |
-| 검사 | Pytest 스타일 스모크 검사, Playwright |
-| 배포 목표 | Render Static Site, Render Web Service, Docker |
+| 검사 | FastAPI 스모크 검사, Playwright |
+| 배포 | Render Blueprint, Static Site, Docker Web Service |
 
 ## 로컬 실행
 
@@ -146,6 +149,22 @@ cd codes/server
 ```
 
 Playwright 검사는 실제 테스트 이미지를 API에 전송하여 탐지 결과와 모바일·태블릿 레이아웃을 확인합니다.
+
+## Render 데모 배포
+
+루트 [`render.yaml`](render.yaml)은 다음 두 서비스를 생성합니다.
+
+| 서비스 | Render 유형 | 기본 주소 |
+| --- | --- | --- |
+| `skytrace-drone-web-t3849411` | Static Site | `https://skytrace-drone-web-t3849411.onrender.com` |
+| `skytrace-drone-api-t3849411` | Free Web Service | `https://skytrace-drone-api-t3849411.onrender.com` |
+
+위의 **Deploy to Render** 버튼을 누르고 GitHub 저장소 접근을 허용한 뒤 Blueprint를 적용합니다. Static Site는 `codes/client`를 빌드하고, Web Service는 `codes/server/Dockerfile`로 모델 서버를 실행합니다. CORS와 `VITE_API_BASE_URL`은 Blueprint에 서로의 공개 주소로 설정되어 있습니다.
+
+무료 Web Service는 유휴 상태에서 종료될 수 있습니다. 프론트는 백엔드가 준비될 때까지 `무료 서버 시작 대기 중`을 표시하고 5초마다 상태를 다시 확인합니다. Render가 서비스 이름 충돌로 기본 주소를 변경한 경우 다음 두 값을 실제 주소로 함께 수정한 뒤 다시 배포해야 합니다.
+
+- Static Site의 `VITE_API_BASE_URL`
+- Web Service의 `CORS_ORIGINS`
 
 ## 프로젝트 구조
 

@@ -20,6 +20,7 @@ import { API_BASE_URL, detectDrone, fetchHealth } from './api'
 import type { DetectionResponse, HealthResponse } from './types'
 
 type ViewState = 'empty' | 'ready' | 'loading' | 'success' | 'error'
+type ServerState = 'checking' | 'ready' | 'retrying'
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp']
 const MAX_FILE_BYTES = 10 * 1024 * 1024
@@ -39,13 +40,38 @@ function App() {
   const [iou, setIou] = useState(0.7)
   const [dragging, setDragging] = useState(false)
   const [health, setHealth] = useState<HealthResponse | null>(null)
+  const [serverState, setServerState] = useState<ServerState>('checking')
   const fileInput = useRef<HTMLInputElement>(null)
   const requestController = useRef<AbortController | null>(null)
 
   useEffect(() => {
-    const controller = new AbortController()
-    fetchHealth(controller.signal).then(setHealth).catch(() => setHealth(null))
-    return () => controller.abort()
+    let stopped = false
+    let retryTimer: number | undefined
+    let controller: AbortController | undefined
+
+    const checkServer = async () => {
+      controller = new AbortController()
+      try {
+        const response = await fetchHealth(controller.signal)
+        if (!stopped) {
+          setHealth(response)
+          setServerState('ready')
+        }
+      } catch {
+        if (!stopped) {
+          setHealth(null)
+          setServerState('retrying')
+          retryTimer = window.setTimeout(checkServer, 5_000)
+        }
+      }
+    }
+
+    void checkServer()
+    return () => {
+      stopped = true
+      controller?.abort()
+      if (retryTimer) window.clearTimeout(retryTimer)
+    }
   }, [])
 
   useEffect(() => () => {
@@ -126,9 +152,9 @@ function App() {
               <p className="mt-0.5 text-[11px] tracking-wide text-slate-500">드론 객체 탐지 시스템</p>
             </div>
           </div>
-          <div className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-2.5 py-1.5 text-[11px] sm:px-3 sm:text-xs ${health ? 'border-emerald-400/20 bg-emerald-400/8 text-emerald-300' : 'border-rose-400/20 bg-rose-400/8 text-rose-300'}`}>
-            <span className={`size-1.5 rounded-full ${health ? 'bg-emerald-300 shadow-[0_0_8px_#6ee7b7]' : 'bg-rose-300'}`} />
-            {health ? '탐지 서버 연결됨' : '서버 연결 확인 중'}
+          <div className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-2.5 py-1.5 text-[11px] sm:px-3 sm:text-xs ${health ? 'border-emerald-400/20 bg-emerald-400/8 text-emerald-300' : 'border-amber-300/20 bg-amber-300/8 text-amber-200'}`}>
+            <span className={`size-1.5 rounded-full ${health ? 'bg-emerald-300 shadow-[0_0_8px_#6ee7b7]' : 'animate-pulse bg-amber-300'}`} />
+            {serverState === 'ready' ? '탐지 서버 연결됨' : serverState === 'retrying' ? '무료 서버 시작 대기 중' : '서버 연결 확인 중'}
           </div>
         </div>
       </header>
