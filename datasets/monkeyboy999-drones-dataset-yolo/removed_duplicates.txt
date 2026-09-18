@@ -1,0 +1,14 @@
+# Removed byte-identical duplicate image/label pairs
+# kept -> removed
+test/images/74.jpg -> train/images/114.jpg
+test/images/pic_691.jpg -> val/images/0013.jpg
+train/images/0015.jpg -> train/images/pic_535.jpg
+train/images/0024.jpg -> train/images/pic_069.jpg
+train/images/0029.jpg -> train/images/0063.jpg
+train/images/0032.jpg -> train/images/0033.jpg
+train/images/0050.jpg -> train/images/0058.jpg
+train/images/0097.jpg -> train/images/pic_443.jpg
+train/images/0224.jpg -> train/images/pic_424.jpg
+train/images/0239.jpg -> train/images/pic_450.jpg
+train/images/0283.jpg -> train/images/pic_193.jpg
+train/images/0306.jpg -> train/images/pic_066.jpg

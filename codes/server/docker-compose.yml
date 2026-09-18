@@ -1,0 +1,25 @@
+services:
+  api:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    environment:
+      MODEL_PATH: /app/drone-detection-yolo26n.pt
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-10}
+      MAX_IMAGE_PIXELS: ${MAX_IMAGE_PIXELS:-40000000}
+      DEFAULT_CONFIDENCE: ${DEFAULT_CONFIDENCE:-0.25}
+      DEFAULT_IOU: ${DEFAULT_IOU:-0.7}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+      MODEL_WARMUP: ${MODEL_WARMUP:-true}
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s

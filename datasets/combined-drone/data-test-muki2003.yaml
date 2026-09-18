@@ -1,0 +1,6 @@
+train: train.txt
+val: val.txt
+test: test-muki2003.txt
+
+names:
+  0: drone

@@ -1,0 +1,153 @@
+{
+  "seed": 42,
+  "class_names": {
+    "0": "drone"
+  },
+  "sources": {
+    "muki2003/yolo-drone-detection-dataset": {
+      "original_images": 1359,
+      "unique_images": 1339,
+      "duplicates_removed": 20,
+      "cross_split_duplicates_removed": 15,
+      "removed_duplicates": [
+        {
+          "kept": "valid/images/0074.jpg",
+          "removed": "train/images/pic_579.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0283.jpg",
+          "removed": "train/images/pic_193.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0239.jpg",
+          "removed": "train/images/pic_450.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0024.jpg",
+          "removed": "train/images/pic_069.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0319.jpg",
+          "removed": "train/images/pic_232.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0029.jpg",
+          "removed": "valid/images/0063.jpg",
+          "cross_split": false
+        },
+        {
+          "kept": "valid/images/0015.jpg",
+          "removed": "train/images/pic_535.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0297.jpg",
+          "removed": "train/images/pic_372.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0096.jpg",
+          "removed": "train/images/pic_037.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0097.jpg",
+          "removed": "train/images/pic_443.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0306.jpg",
+          "removed": "train/images/pic_066.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0013.jpg",
+          "removed": "train/images/pic_691.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0028.jpg",
+          "removed": "valid/images/0039.jpg",
+          "cross_split": false
+        },
+        {
+          "kept": "valid/images/0069.jpg",
+          "removed": "train/images/pic_419.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0032.jpg",
+          "removed": "valid/images/0033.jpg",
+          "cross_split": false
+        },
+        {
+          "kept": "valid/images/0224.jpg",
+          "removed": "train/images/pic_424.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0281.jpg",
+          "removed": "train/images/pic_167.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0230.jpg",
+          "removed": "train/images/pic_304.jpg",
+          "cross_split": true
+        },
+        {
+          "kept": "valid/images/0050.jpg",
+          "removed": "valid/images/0058.jpg",
+          "cross_split": false
+        },
+        {
+          "kept": "valid/images/0086.jpg",
+          "removed": "valid/images/pic_010.jpg",
+          "cross_split": false
+        }
+      ]
+    },
+    "monkeyboy999/drones-dataset-yolo": {
+      "curated_images": 10146
+    }
+  },
+  "splits": {
+    "train": {
+      "images": 7994,
+      "boxes": 8255,
+      "empty_labels": 650,
+      "by_source": {
+        "muki2003": 897,
+        "monkeyboy999": 7097
+      }
+    },
+    "val": {
+      "images": 1625,
+      "boxes": 1664,
+      "empty_labels": 140,
+      "by_source": {
+        "muki2003": 100,
+        "monkeyboy999": 1525
+      }
+    },
+    "test": {
+      "images": 1866,
+      "boxes": 1909,
+      "empty_labels": 139,
+      "by_source": {
+        "muki2003": 342,
+        "monkeyboy999": 1524
+      }
+    }
+  },
+  "totals": {
+    "images": 11485,
+    "boxes": 11828,
+    "empty_labels": 929
+  }
+}

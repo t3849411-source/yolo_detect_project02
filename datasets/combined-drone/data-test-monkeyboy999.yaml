@@ -1,0 +1,6 @@
+train: train.txt
+val: val.txt
+test: test-monkeyboy999.txt
+
+names:
+  0: drone
